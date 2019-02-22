@@ -1,0 +1,24 @@
+# IntelliJ
+*.iml
+.idea/
+
+# Log Files
+*.log
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Gradle files
+.gradle/
+build/
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+
+# Mac OS meta files
+.DS_Store
