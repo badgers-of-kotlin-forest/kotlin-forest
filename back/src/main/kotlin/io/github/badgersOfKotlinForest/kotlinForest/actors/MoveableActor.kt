@@ -7,5 +7,5 @@ interface MoveableActor : Actor {
 
     val movementPeriod: Int
 
-    fun move(map: ForestMap, position: MapItemPosition)
+    fun move(map: ForestMap, position: MapItemPosition): MapItemPosition
 }
