@@ -4,7 +4,8 @@ import io.github.badgersOfKotlinForest.kotlinForest.map.ForestMap
 import io.github.badgersOfKotlinForest.kotlinForest.map.MapItemPosition
 import io.github.badgersOfKotlinForest.kotlinForest.tree.Dwelling
 
-abstract class OrdinaryAnimal(val maxHealf: Int, val maxFullness: Int, val regenRate: Int, val damage: Int) : Animal {
+// val damage: Int
+abstract class OrdinaryAnimal(val maxHealf: Int, val maxFullness: Int, val regenRate: Int) : Animal {
     var healf = maxHealf
         private set
 
@@ -48,7 +49,7 @@ abstract class OrdinaryAnimal(val maxHealf: Int, val maxFullness: Int, val regen
 
     fun wellbeing() {
         if (fullness == maxFullness) {
-            healf += regenRate
+            healf = (healf + regenRate) % maxFullness
         }
     }
 
