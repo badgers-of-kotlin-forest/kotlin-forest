@@ -2,7 +2,6 @@ package io.github.badgersOfKotlinForest.kotlinForest.map
 
 import io.github.badgersOfKotlinForest.kotlinForest.actors.Actor
 import io.github.badgersOfKotlinForest.kotlinForest.actors.MoveableActor
-import io.github.badgersOfKotlinForest.kotlinForest.animals.Animal
 
 data class MapItemPosition(val x: Int, val y: Int, val z: Int)
 
@@ -13,20 +12,17 @@ data class MapItemPosition(val x: Int, val y: Int, val z: Int)
 */
 class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
     private var time: Long = 0
-    private val period: Long = Long.MAX_VALUE
-    val length: Int
-    val width: Int
-    val height: Int
+    val length = map.size
+    val width = map[0].size
+    val height = 5
 
     private var toAdd: MutableList<Pair<Actor, MapItemPosition>> = mutableListOf()
 
     private var toRemove: MutableList<Pair<Actor, MapItemPosition>> = mutableListOf()
 
     init {
-        length = map.size
-        width = map[0].size
-        height = 5
-        assert(height == map[0][0].size)
+        require(map.isNotEmpty() && map[0].isNotEmpty() && map[0][0].isNotEmpty()) { "map can't be empty" }
+        require(height == map[0][0].size) { "height is constant and equals to 5" }
     }
 
 //    //TODO: discuss z slices
@@ -76,7 +72,7 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
                 }
             }
         }
-        assert(toAdd.size == toRemove.size)
+        require(toAdd.size == toRemove.size) { "It is understood that the actors all walk first, then all interact" }
         updateActorsPositions()
     }
 
@@ -85,17 +81,11 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
             xs.forEachIndexed { y, ys ->
                 ys.forEachIndexed { z, mapItem ->
                     val actors = mapItem.actors
-                    val firstActor = actors.first()
-                    actors.removeAt(0)
-                    var curActor = firstActor
-                    do {
-                        actors.filter { (it is Animal && !it.isHidden) || it !is Animal }.forEach {
-                            curActor.interactWith(it)
+                    for (actor in actors) {
+                        for (otherActor in actors.filter { actor !== it }) {
+                            actor.interactWith(otherActor)
                         }
-                        actors.add(curActor)
-                        curActor = actors.first()
-                        actors.removeAt(0)
-                    } while (curActor != firstActor)
+                    }
                 }
             }
         }
@@ -105,6 +95,6 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
     fun tick() {
         moveActors()
         interactActors()
-        time = (time + 1) / period
+        time = maxOf(0, time + 1)
     }
 }
