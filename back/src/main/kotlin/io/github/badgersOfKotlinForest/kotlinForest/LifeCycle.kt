@@ -91,8 +91,13 @@ class LifeCycle(val length: Int, val width: Int) {
         updateActorsPositions()
     }
 
+    private fun actActors() {
+        map.forEach { it.forEach { it.forEach { it.forEach { it.act() } } } }
+    }
+
     fun tick() {
         moveActors()
         interactActors()
+        actActors()
     }
 }
