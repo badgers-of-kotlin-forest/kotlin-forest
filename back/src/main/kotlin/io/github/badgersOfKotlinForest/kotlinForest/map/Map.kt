@@ -2,6 +2,7 @@ package io.github.badgersOfKotlinForest.kotlinForest.map
 
 import io.github.badgersOfKotlinForest.kotlinForest.actors.Actor
 import io.github.badgersOfKotlinForest.kotlinForest.actors.MoveableActor
+import io.github.badgersOfKotlinForest.kotlinForest.animals.Animal
 
 data class MapItemPosition(val x: Int, val y: Int, val z: Int)
 
@@ -16,6 +17,10 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
     val length: Int
     val width: Int
     val height: Int
+
+    private var toAdd: MutableList<Pair<Actor, MapItemPosition>> = mutableListOf()
+
+    private var toRemove: MutableList<Pair<Actor, MapItemPosition>> = mutableListOf()
 
     init {
         length = map.size
@@ -34,26 +39,45 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
 //        }.toTypedArray()
 //    }
 
-    private fun moveActor(actor: Actor, prevPosition: MapItemPosition, position: MapItemPosition) {
-        map[prevPosition.x][prevPosition.y][prevPosition.z].actors.remove(actor)
-        map[position.x][position.y][position.z].actors.remove(actor)
+    fun addActor(actor: Actor, position: MapItemPosition) = toAdd.add(Pair(actor, position))
+
+    private fun addActors() {
+        toAdd.forEach { (actor, position) -> map[position.x][position.y][position.z].actors.add(actor) }
+        toAdd = mutableListOf()
+    }
+
+    fun removeActor(actor: Actor, position: MapItemPosition) = toRemove.add(Pair(actor, position))
+
+    private fun removeActors() {
+        toRemove.forEach { (actor, position) -> map[position.x][position.y][position.z].actors.remove(actor) }
+        toRemove = mutableListOf()
+    }
+
+    fun moveActor(actor: Actor, previousPosition: MapItemPosition, nextPosition: MapItemPosition) {
+        removeActor(actor, previousPosition)
+        addActor(actor, nextPosition)
+    }
+
+    private fun updateActorsPositions() {
+        removeActors()
+        addActors()
     }
 
     private fun moveActors() {
-        val moves = mutableListOf<Triple<Actor, MapItemPosition, MapItemPosition>>()
         map.forEachIndexed { x, xs ->
             xs.forEachIndexed { y, ys ->
                 ys.forEachIndexed { z, zs ->
                     zs.actors.forEach {
                         if (it is MoveableActor && time % it.movementPeriod == 0L) {
                             val position = MapItemPosition(x, y, z)
-                            moves.add(Triple(it, position, it.move(this, position)))
+                            it.move(this, position)
                         }
                     }
                 }
             }
         }
-        moves.forEach { moveActor(it.first, it.second, it.third) }
+        assert(toAdd.size == toRemove.size)
+        updateActorsPositions()
     }
 
     private fun interactActors() {
@@ -65,7 +89,9 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
                     actors.removeAt(0)
                     var curActor = firstActor
                     do {
-                        actors.forEach { curActor.interactWith(it) }
+                        actors.filter { (it is Animal && !it.isHidden) || it !is Animal }.forEach {
+                            curActor.interactWith(it)
+                        }
                         actors.add(curActor)
                         curActor = actors.first()
                         actors.removeAt(0)
@@ -73,6 +99,7 @@ class ForestMap(private val map: Array<Array<Array<MapItem>>>) {
                 }
             }
         }
+        updateActorsPositions()
     }
 
     fun tick() {
