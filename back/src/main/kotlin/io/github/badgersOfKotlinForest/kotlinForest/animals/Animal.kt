@@ -2,7 +2,7 @@ package io.github.badgersOfKotlinForest.kotlinForest.animals
 
 import io.github.badgersOfKotlinForest.kotlinForest.actors.MoveableActor
 import io.github.badgersOfKotlinForest.kotlinForest.map.ForestMap
-import io.github.badgersOfKotlinForest.kotlinForest.map.MapItemPosition
+import io.github.badgersOfKotlinForest.kotlinForest.map.MapPosition
 import io.github.badgersOfKotlinForest.kotlinForest.tree.Dwelling
 
 // val damage: Int
@@ -39,13 +39,13 @@ abstract class Animal(val maxHealth: Int, val maxFullness: Int, val regeneration
 
     abstract fun canEat(foodType: EatableType): Boolean
 
-    protected fun eat(map: ForestMap, position: MapItemPosition, food: Eatable) {
+    protected fun eat(map: ForestMap, position: MapPosition, food: Eatable) {
         require(canEat(food.type)) { "Can't eat ${food.type}, check it first." }
         fullness = minOf(fullness + food.size, maxFullness)
         map.removeActor(food, position)
     }
 
-    protected fun breed(map: ForestMap, position: MapItemPosition, otherAnimal: Animal) {
+    protected fun breed(map: ForestMap, position: MapPosition, otherAnimal: Animal) {
         // TODO add delay
         map.addActor(otherAnimal::class.java.newInstance()!!, position)
     }

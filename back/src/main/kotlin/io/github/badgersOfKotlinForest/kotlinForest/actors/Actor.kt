@@ -1,8 +1,6 @@
 package io.github.badgersOfKotlinForest.kotlinForest.actors
 
 interface Actor {
-    // TODO to discuss
-//    val forestMap: ForestMap
-
-    fun interactWith(other: Actor)
+    // to update internal properties (example: plant will grow)
+    fun act()
 }
