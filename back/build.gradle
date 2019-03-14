@@ -1,5 +1,12 @@
+buildscript {
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21"
+    }
+}
+
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'kotlin'
 }
 
 repositories {
@@ -7,7 +14,9 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.21"
+    testCompile 'junit:junit:4.11'
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:1.3.21"
 }
 
 compileKotlin {
