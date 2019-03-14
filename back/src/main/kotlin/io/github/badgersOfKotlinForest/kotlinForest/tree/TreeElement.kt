@@ -7,7 +7,7 @@ interface TreeElement : Actor {
 }
 
 enum class TreeElementType {
-    CROWN,
+    ROOT,
     TRUNK,
-    ROOT
+    CROWN;
 }

@@ -20,11 +20,11 @@ abstract class Animal(val maxHealth: Int, val maxFullness: Int, val regeneration
     // TODO: protected var busy = false
 
     protected fun getIntoDwelling(dwelling: Dwelling) {
-        dwelling.animalsInside.add(this)
+        dwelling.addAnimal(this)
     }
 
     protected fun getOutDwelling(dwelling: Dwelling) {
-        dwelling.animalsInside.remove(this)
+        dwelling.removeAnimal(this)
     }
 
     abstract fun canEat(foodType: EatableType): Boolean
