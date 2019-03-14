@@ -35,10 +35,12 @@ abstract class Animal(val maxHealth: Int, val maxFullness: Int, val regeneration
         map.removeActor(food)
     }
 
-    protected fun breed(map: ForestSight, otherAnimal: Animal) {
-        // TODO add delay
-        map.addActor(otherAnimal::class.java.newInstance()!!)
-    }
+//    protected fun breed(map: ForestSight, otherAnimal: Animal) {
+//        // TODO add delay
+//        map.addActor(otherAnimal::class.java.newInstance()!!)
+//    }
+
+    protected abstract fun breed(map: ForestSight, otherAnimal: Animal)
 
     protected fun wellbeing() {
         if (fullness == maxFullness) {
