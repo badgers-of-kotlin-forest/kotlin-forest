@@ -1,12 +1,12 @@
 package io.github.badgersOfKotlinForest.kotlinForest.actors
 
-import io.github.badgersOfKotlinForest.kotlinForest.map.ForestMap
+import io.github.badgersOfKotlinForest.kotlinForest.map.ForestSight
 
 interface MoveableActor : Actor {
 
     val sight: Int
 
-    fun move(forestMap: ForestMap)
+    fun move(forestMap: ForestSight)
 
-    fun interact(forestMap: ForestMap)
+    fun act(forestMap: ForestSight)
 }
